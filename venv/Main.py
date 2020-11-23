@@ -1,5 +1,4 @@
 from De import ClassicDE
-from yabox.problems import Levy
 import matplotlib.pyplot as plt
 
 
