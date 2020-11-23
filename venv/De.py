@@ -1,5 +1,7 @@
 import numpy as np
 from Evaluators import Evaluate
+from progressbar import ProgressBar
+from tqdm import tqdm
 
 
 class ClassicDE():
@@ -9,7 +11,7 @@ class ClassicDE():
     mutation = 0.8
     cross_probability = 0.7
     population_size = 20
-    iterations = 1000
+    iterations = 10000
     ev = Evaluate()
     clip = 1                # if coordinate out of bounds: 1 - clip, 0 - draw again
     # Derivatives
@@ -26,7 +28,7 @@ class ClassicDE():
         self.initialize_population()
 
     def de(self):
-        for i in range (self.iterations):
+        for i in tqdm(range (self.iterations)):
             for j in range (self.population_size):
                 indexes_except_best = [ind for ind in range (self.population_size) if ind != j]
                 vector_a, vector_b, vector_c = self.normalized_population[np.random.choice(indexes_except_best, 3, replace=False)]
@@ -40,6 +42,7 @@ class ClassicDE():
                 # self.update(self.testing_func(candidating_denorm), candidating_denorm, candidating_vect, j)
                 self.update(self.ev.levy(candidating_denorm), candidating_denorm, candidating_vect, j)
             yield self.best_vector, self.values_array[self.best_index]
+
 
     def initialize_population(self):
         self.normalized_population = np.random.rand(self.population_size, self.dimensions)
