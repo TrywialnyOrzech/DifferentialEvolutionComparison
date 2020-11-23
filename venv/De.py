@@ -1,11 +1,10 @@
 import numpy as np
-from yabox.problems import Levy
-import matplotlib.pyplot as plt
+
 
 class ClassicDE():
     # Parameters known a priori
-    testing_func = lambda self, x: sum(x**2)/len(x)
-    bounds = [(-100, 100)]
+    #testing_func = lambda self, x: sum(x**2)/len(x)
+    bounds = [(-10, 10)]
     mutation = 0.8
     cross_probability = 0.7
     population_size = 20
@@ -36,7 +35,8 @@ class ClassicDE():
                     cross_points[np.random.randint(0, self.dimensions)] = True
                 candidating_vect = np.where(cross_points, mutant, self.normalized_population[j])
                 candidating_denorm = self.denorm(candidating_vect)
-                self.update(self.testing_func(candidating_denorm), candidating_denorm, candidating_vect, j)
+                # self.update(self.testing_func(candidating_denorm), candidating_denorm, candidating_vect, j)
+                self.update(self.evaluate(candidating_denorm), candidating_denorm, candidating_vect, j)
             yield self.best_vector, self.values_array[self.best_index]
 
     def initialize_population(self):
@@ -51,7 +51,8 @@ class ClassicDE():
         return max_bound - bounds_difference * normalized_population
 
     def find_best_vector(self, denorm_population):
-        self.values_array = np.asarray([self.testing_func(ind) for ind in denorm_population])
+        # self.values_array = np.asarray([self.testing_func(ind) for ind in denorm_population])
+        self.values_array = np.asarray([self.evaluate(ind) for ind in denorm_population])
         self.best_index = np.argmin(self.values_array)
         return denorm_population[self.best_index]
 
@@ -62,3 +63,12 @@ class ClassicDE():
             if candidate < self.values_array[self.best_index]:
                 self.best_index = j
                 self.best_vector = denorm_candidate
+
+    def evaluate(self, x):
+        w = 1 + (x - 1) / 4
+        wp = w[:-1]
+        wd = w[-1]
+        a = np.sin(np.pi * w[0]) ** 2
+        b = sum((wp - 1) ** 2 * (1 + 10 * np.sin(np.pi * wp + 1) ** 2))
+        c = (wd - 1) ** 2 * (1 + np.sin(2 * np.pi * wd) ** 2)
+        return a + b + c
