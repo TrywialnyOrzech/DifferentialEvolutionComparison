@@ -1,9 +1,8 @@
 import numpy as np
 
 
-
-class Evaluate():
-    def __init__ (self):
+class Evaluate:
+    def __init__(self):
         self.choice = 0
         print("Evaluators object has been initialized.")
 

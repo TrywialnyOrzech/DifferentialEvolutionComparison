@@ -1,12 +1,14 @@
-import numpy as np
-from Evaluators import Evaluate
 from progressbar import ProgressBar
 from tqdm import tqdm
+import numpy as np
+
+from src.evaluators import Evaluate
 
 
-class ClassicDE():
+class ClassicDE:
+
     # Parameters known a priori
-    #testing_func = lambda self, x: sum(x**2)/len(x)
+    # testing_func = lambda self, x: sum(x**2)/len(x)
     bounds = [(-10, 10)]
     mutation = 0.8
     cross_probability = 0.7
@@ -14,6 +16,7 @@ class ClassicDE():
     iterations = 10000
     ev = Evaluate()
     clip = 1                # if coordinate out of bounds: 1 - clip, 0 - draw again
+
     # Derivatives
     dimensions = 0
     normalized_population = np.empty([dimensions, population_size])
@@ -28,10 +31,11 @@ class ClassicDE():
         self.initialize_population()
 
     def de(self):
-        for i in tqdm(range (self.iterations)):
-            for j in range (self.population_size):
+        for i in tqdm(range(self.iterations)):
+            for j in range(self.population_size):
                 indexes_except_best = [ind for ind in range (self.population_size) if ind != j]
                 vector_a, vector_b, vector_c = self.normalized_population[np.random.choice(indexes_except_best, 3, replace=False)]
+
                 # Clip or Draw - to implement
                 mutant = np.clip(vector_a + self.mutation * (vector_b - vector_c), 0, 1)
                 cross_points = np.random.rand(self.dimensions) < self.cross_probability
@@ -39,6 +43,7 @@ class ClassicDE():
                     cross_points[np.random.randint(0, self.dimensions)] = True
                 candidating_vect = np.where(cross_points, mutant, self.normalized_population[j])
                 candidating_denorm = self.denorm(candidating_vect)
+
                 # self.update(self.testing_func(candidating_denorm), candidating_denorm, candidating_vect, j)
                 self.update(self.ev.levy(candidating_denorm), candidating_denorm, candidating_vect, j)
             yield self.best_vector, self.values_array[self.best_index]
