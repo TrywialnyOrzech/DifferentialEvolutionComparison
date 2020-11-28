@@ -1,5 +1,6 @@
-from De import ClassicDE
 import matplotlib.pyplot as plt
+
+from src.de import ClassicDE
 
 
 def main():
@@ -7,6 +8,7 @@ def main():
     result = list(de1.de())
     print(result[-1])
     print("End.")
+
 
 if __name__ == '__main__':
     main()
