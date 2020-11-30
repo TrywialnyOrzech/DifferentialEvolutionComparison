@@ -11,7 +11,7 @@ source venv/bin/activate
 pip instal -r requirements.txt
 ```
 
-To run prepared comparion:
+To run prepared comparison:
 ```
 python main.py
 ```
