@@ -7,27 +7,25 @@ from src.evaluators import Evaluate
 
 class ClassicDE:
 
-    # Parameters known a priori
-    # testing_func = lambda self, x: sum(x**2)/len(x)
-    bounds = [(-10, 10)]
-    mutation = 0.8
-    cross_probability = 0.7
-    population_size = 20
-    iterations = 10000
-    ev = Evaluate()
-    clip = 1                # if coordinate out of bounds: 1 - clip, 0 - draw again
-
     # Derivatives
     dimensions = 0
     normalized_population = np.empty([dimensions, population_size])
     denorm_population = np.empty([dimensions, population_size])
     values_array = np.empty([dimensions, population_size], int)
-    best_vector = np.empty([1])
-    best_index = -1
 
-    def __init__(self):
+    def __init__(self, bounds, mutation, cross_probability, population, iterations, clip, cost_function):
+        self.bounds = bounds
+        self.mutation = mutation
+        self.cross_probability = cross_probability,
+        self.population = population
+        self.iterations = iterations
+        self.clip = clip
+        self.population_size = len(population)
+        self.cost_function = cost_function
         # set parameters above given from main.py
         self.dimensions = len(self.bounds)
+        self.best_vector = np.empty([1])
+        self.best_index = -1
         self.initialize_population()
 
     def de(self):
@@ -45,7 +43,7 @@ class ClassicDE:
                 candidating_denorm = self.denorm(candidating_vect)
 
                 # self.update(self.testing_func(candidating_denorm), candidating_denorm, candidating_vect, j)
-                self.update(self.ev.levy(candidating_denorm), candidating_denorm, candidating_vect, j)
+                self.update(self.cost_function.levy(candidating_denorm), candidating_denorm, candidating_vect, j)
             yield self.best_vector, self.values_array[self.best_index]
 
 
@@ -62,7 +60,7 @@ class ClassicDE:
 
     def find_best_vector(self, denorm_population):
         # self.values_array = np.asarray([self.testing_func(ind) for ind in denorm_population])
-        self.values_array = np.asarray([self.ev.levy(ind) for ind in denorm_population])
+        self.values_array = np.asarray([self.cost_function.levy(ind) for ind in denorm_population])
         self.best_index = np.argmin(self.values_array)
         return denorm_population[self.best_index]
 
