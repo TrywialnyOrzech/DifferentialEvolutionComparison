@@ -27,10 +27,10 @@ class ClassicDE:
             for j in range(self.population_size):
                 indexes_except_best = [ind for ind in range (self.population_size) if ind != j]
                 vector_a, vector_b, vector_c = self.normalized_population[np.random.choice(indexes_except_best, 3, replace=False)]
-                # Clip or Draw - to implement
+
                 mutant = np.clip(vector_a + self.mutation * (vector_b - vector_c), 0, 1)
                 if self.do_exp:
-                    pass
+                    cross_points = self.exp_crosspoints(self.dimensions)
                 else:
                     cross_points = np.random.rand(self.dimensions) < self.cross_probability
                 if not np.any(cross_points):
@@ -39,6 +39,15 @@ class ClassicDE:
                 candidating_denorm = self.denorm(candidating_vect)
                 self.update(self.cost_function(candidating_denorm), candidating_denorm, candidating_vect, j)
             yield self.best_vector, self.values_array[self.best_index]
+
+    def exp_crosspoints(self, dimensions):
+        start_point = np.random.randint(dimensions)
+        length = 1 + np.random.randint(dimensions - 1)
+        cp = [False] * dimensions
+        for i in range(length):
+            cp[(start_point + i) % dimensions] = True
+
+        return cp
 
     def denorm(self, normalized_population):
         # to implement: check if bounds are given in proper order
