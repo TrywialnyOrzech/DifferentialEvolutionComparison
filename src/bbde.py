@@ -5,14 +5,15 @@ from tqdm import tqdm
 import numpy as np
 
 
-def bbde(fobj, bounds, population, its=1000, alternative_exp_offset=True):
+def bbde(fobj, pop, its=1000, alternative_exp_offset=True):
     exp_offset = 0.5 if alternative_exp_offset else 0.0
-    results = []
+    population = pop.copy()
     popsize = len(population)
 
     fitness = np.asarray([fobj(ind) for ind in population])
     best_index = np.argmin(fitness)
     best = population[best_index]
+    results = [(best, fitness[best_index])]
 
     for i in tqdm(range(its), leave=False):
         for j in range(len(population)):

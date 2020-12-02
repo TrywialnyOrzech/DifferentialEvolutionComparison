@@ -18,15 +18,16 @@ class ClassicDE:
         self.dimensions = len(self.bounds)
         self.best_vector = np.empty([1])
         self.best_index = -1
-        self.population_size = population_size
+        self.population_size = population_sizeą
         self.do_exp = exp_cross
         self.best_vector = self.find_best_vector(self.denorm_population)
 
     def de(self):
+        normalized_population = self.normalized_population.copy()
         for i in tqdm(range(self.iterations)):
             for j in range(self.population_size):
                 indexes_except_best = [ind for ind in range (self.population_size) if ind != j]
-                vector_a, vector_b, vector_c = self.normalized_population[np.random.choice(indexes_except_best, 3, replace=False)]
+                vector_a, vector_b, vector_c = normalized_population[np.random.choice(indexes_except_best, 3, replace=False)]
 
                 mutant = np.clip(vector_a + self.mutation * (vector_b - vector_c), 0, 1)
                 if self.do_exp:
@@ -35,7 +36,7 @@ class ClassicDE:
                     cross_points = np.random.rand(self.dimensions) < self.cross_probability
                 if not np.any(cross_points):
                     cross_points[np.random.randint(0, self.dimensions)] = True
-                candidating_vect = np.where(cross_points, mutant, self.normalized_population[j])
+                candidating_vect = np.where(cross_points, mutant, normalized_population[j])
                 candidating_denorm = self.denorm(candidating_vect)
                 self.update(self.cost_function(candidating_denorm), candidating_denorm, candidating_vect, j)
             yield self.best_vector, self.values_array[self.best_index]
