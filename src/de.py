@@ -18,13 +18,13 @@ class ClassicDE:
         self.dimensions = len(self.bounds)
         self.best_vector = np.empty([1])
         self.best_index = -1
-        self.population_size = population_sizeą
+        self.population_size = population_size
         self.do_exp = exp_cross
         self.best_vector = self.find_best_vector(self.denorm_population)
 
     def de(self):
         normalized_population = self.normalized_population.copy()
-        for i in tqdm(range(self.iterations)):
+        for i in tqdm(range(self.iterations), leave=False, desc=f'DE exp - {self.do_exp}'):
             for j in range(self.population_size):
                 indexes_except_best = [ind for ind in range (self.population_size) if ind != j]
                 vector_a, vector_b, vector_c = normalized_population[np.random.choice(indexes_except_best, 3, replace=False)]

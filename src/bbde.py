@@ -13,9 +13,9 @@ def bbde(fobj, pop, its=1000, alternative_exp_offset=True):
     fitness = np.asarray([fobj(ind) for ind in population])
     best_index = np.argmin(fitness)
     best = population[best_index]
-    results = [(best, fitness[best_index])]
+    results = []
 
-    for i in tqdm(range(its), leave=False):
+    for i in tqdm(range(its), leave=False, desc=f'BBDE alt - {alternative_exp_offset}'):
         for j in range(len(population)):
             random_indexes = [idx for idx in range(popsize)]  # r1 != r2
             r1, r2 = population[np.random.choice(random_indexes, 2, replace=False)]

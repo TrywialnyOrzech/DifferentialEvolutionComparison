@@ -7,25 +7,10 @@ from src.experiment_helpers.whole_tests import run_experiments_for_cost_function
 def run():
     cases = [
         {
-            'cost_function': rosenbrock,
-            'cost_function_name': 'rosenbrock',
-            'bounds': [(-5, 10)]
-        },
-        {
-            'cost_function': bowl,
-            'cost_function_name': 'bowl',
-            'bounds': [(-100, 100)]
-        },
-        {
-            'cost_function': levy,
-            'cost_function_name': 'levy',
-            'bounds': [(-10, 10)]
-        },
-        {
             'cost_function': michalewicz,
             'cost_function_name': 'michalewicz',
             'bounds': [(0, 3.14159265359)]  # 0 to π
-        },
+        }
     ]
 
     for case in tqdm(cases):
@@ -40,4 +25,5 @@ def run():
 
 
 if __name__ == '__main__':
+    print('michalewicz')
     run()
