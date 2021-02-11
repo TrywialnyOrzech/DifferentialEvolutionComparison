@@ -10,7 +10,7 @@ cd DifferentialEvolutionComparison
 # create Python virtual environment and install dependencies
 python -m venv venv
 source venv/bin/activate
-pip instal -r requirements.txt
+pip install -r requirements.txt
 ```
 
 To run prepared comparison:
